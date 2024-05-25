@@ -25,10 +25,10 @@
   },
   "keywords": [
     "metamask-sweeper-bot",
-    "swiper-bot",
+    "sweeper-bot",
     "eth-burner"
   ],
-  "author": "tarit",
+  "author": "0xtarit",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/0xtarit/metamask-sweeper-bot/issues"
