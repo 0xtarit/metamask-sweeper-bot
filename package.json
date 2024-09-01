@@ -1,6 +1,6 @@
 {
   "name": "metamask-sweeper-bot",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Watches each block for a balance update, and if one is detected, burns all that funds by transferring funds with the highest possible transaction fee, effectively burning it from the account.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
